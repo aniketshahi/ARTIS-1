@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Optional, List, Dict, Any
 from sqlalchemy import create_engine, Column, String, Integer, Float, DateTime, JSON, ForeignKey, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, Session
+from sqlalchemy.orm import sessionmaker, relationship, Session as DBSession
 from sqlalchemy.dialects.postgresql import UUID, INET
 import uuid
 
@@ -105,10 +105,9 @@ class Session(Base):
     session_type = Column(String(50))  # shell, meterpreter, etc.
     username = Column(String(100))  # User context
     privileges = Column(String(50))  # user, admin, system
-    established_at = Column(DateTime, default=datetime.utcnow)
-    last_seen = Column(DateTime, default=datetime.utcnow)
-    command_history = Column(JSON, default=list)
-    metadata = Column(JSON)  # Additional session info
+    established_at = Column(DateTime, nullable=False)
+    last_seen = Column(DateTime, nullable=False)
+    session_metadata = Column(JSON)  # Additional session metadata (renamed from 'metadata' to avoid SQLAlchemy conflict)
     
     # Relationships
     exploit = relationship("Exploit", back_populates="sessions")
@@ -128,8 +127,7 @@ class Session(Base):
             'privileges': self.privileges,
             'established_at': self.established_at.isoformat() if self.established_at else None,
             'last_seen': self.last_seen.isoformat() if self.last_seen else None,
-            'command_history': self.command_history,
-            'metadata': self.metadata,
+            'session_metadata': self.session_metadata,
         }
 
 
@@ -203,7 +201,7 @@ class Database:
         Base.metadata.drop_all(self.engine)
         self.logger.warning("Database tables dropped")
     
-    def get_session(self) -> Session:
+    def get_session(self) -> DBSession:
         """Get database session"""
         return self.SessionLocal()
     
