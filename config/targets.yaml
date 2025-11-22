@@ -1,0 +1,46 @@
+# ARTIS Target Configuration
+# Define authorized targets for penetration testing
+
+targets:
+  # Example: Internal Network Scan
+  - name: "Internal Network"
+    cidr: "192.168.1.0/24"
+    authorized: true
+    scan_profile: "thorough"
+    description: "Internal corporate network"
+    
+  # Example: Specific Host
+  - name: "Test Server"
+    cidr: "192.168.1.100"
+    authorized: true
+    scan_profile: "quick"
+    description: "Development test server"
+    
+  # Example: Web Application
+  - name: "Web Application"
+    url: "https://testapp.example.com"
+    authorized: true
+    scan_types: ["zap"]
+    description: "Internal web application"
+    
+  # Example: Metasploitable (for testing)
+  - name: "Metasploitable VM"
+    cidr: "192.168.1.200"
+    authorized: true
+    scan_profile: "thorough"
+    description: "Intentionally vulnerable VM for testing"
+
+# Workflow Configuration
+workflow:
+  auto_exploit: true          # Automatically exploit discovered vulnerabilities
+  max_exploits_per_vuln: 3    # Maximum exploits to try per vulnerability
+  max_concurrent_scans: 5     # Maximum parallel scans
+  scan_timeout: 3600          # Scan timeout in seconds (1 hour)
+  exploit_timeout: 300        # Exploit timeout in seconds (5 minutes)
+
+# Reporting
+reporting:
+  output_dir: "reports"
+  format: "html"              # html, json, pdf
+  include_screenshots: true
+  include_logs: true

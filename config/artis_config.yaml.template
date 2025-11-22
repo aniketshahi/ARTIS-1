@@ -1,0 +1,57 @@
+# ARTIS Configuration Template
+# Copy this to config/artis_config.yaml and modify as needed
+
+# Message Bus (RabbitMQ)
+message_bus:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+  exchange: artis
+  exchange_type: topic
+
+# Database (PostgreSQL)
+database:
+  host: localhost
+  port: 5432
+  database: artis
+  username: artis
+  password: artis123  # Change in production!
+
+# Logging
+logging:
+  level: INFO
+  log_dir: logs
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+  format: json
+
+# Tools
+tools:
+  nmap:
+    path: /usr/bin/nmap
+    default_profile: thorough
+  
+  metasploit:
+    rpc_host: localhost
+    rpc_port: 55553
+    rpc_ssl: false
+    rpc_password: msf
+  
+  exploitdb:
+    searchsploit: /usr/bin/searchsploit
+    path: /usr/share/exploitdb
+
+# Orchestration
+orchestration:
+  max_retries: 3
+  retry_delay: 10
+  exploit_timeout: 300
+  scan_timeout: 3600
+  max_concurrent_scans: 5
+
+# Output
+output:
+  directory: output
+  reports_directory: reports
+  format: html
